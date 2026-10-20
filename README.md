@@ -1,54 +1,39 @@
-# text-chat-application
+# TCP text chat: university networking case study
 
-# Text Chat Application (Client-Server Architecture)
+A C/C++ client-server chat application developed for the University at Buffalo's CSE 489/589 Computer Networks course. This public repository contains a case study and screenshots; the course source code remains private under academic-integrity rules. Behavior and implementation details described below come from the earlier project README and cannot be rerun from this repository.
 
-> The source code for this project is private due to academic integrity guidelines.  
-> Please feel free to [reach out](mailto:manishma@buffalo.edu) if you’d like access for review purposes.
+## Architecture
 
-## Overview
+```text
+Client A ?? TCP ???
+Client B ?? TCP ????? Server event loop (select) ?? delivery / buffering
+Client C ?? TCP ???
+```
 
-This is a networked text chat application developed in C/C++ as part of the **CSE 489/589: Computer Networks** course at the University at Buffalo. It implements a TCP-based client-server architecture, supporting multiple commands and robust message handling across clients.
+The project used TCP sockets for client-server communication and the Unix `select()` system call to monitor multiple connections. The server was responsible for routing direct and broadcast messages and maintaining state used by blocking and offline delivery. The public materials do not include a protocol specification, wire format, concurrency limits, or source-level error handling.
 
-## Features
+## Documented behavior
 
-- **Point-to-point messaging** (`SEND`)
-- **Broadcast messaging** (`BROADCAST`)
-- **User statistics tracking** (`STATISTICS`)
-- **Blocking functionality** (`BLOCK`, `BLOCKED`, `UNBLOCK`)
-- **Buffered message delivery** when clients are offline
-- **Robust exception handling** for all commands
-- **Graceful client logout**
+| Command or feature | Intended behavior |
+| --- | --- |
+| `SEND` | Deliver a message to one user. |
+| `BROADCAST` | Deliver a message to eligible connected users. |
+| `STATISTICS` | Show user or traffic statistics. |
+| `BLOCK`, `BLOCKED`, `UNBLOCK` | Manage and inspect sender blocking. |
+| Offline buffering | Queue eligible messages while a recipient is offline for later delivery. |
+| `LOGOUT` | End a client session. |
 
-## Technologies Used
+The previous README also listed handlers for invalid send, block, blocked, and unblock requests. Exact command syntax, delivery guarantees, queue persistence, and edge cases are not documented in the public repository.
 
-- C/C++
-- TCP Sockets
-- `select()` system call for I/O multiplexing
-- Linux/Unix-based development environment
+## Screenshots
 
-## Team Contributions
+- [Direct message example](https://github.com/user-attachments/assets/5d18584f-1d94-42f2-b4f5-865d9b181cb1)
+- [Broadcast example](https://github.com/user-attachments/assets/9a040561-75cd-48b6-a091-6693e937418b)
 
-### 🧑‍💻 Manish Malepati (manishma)
-- Implemented: `send`, `broadcast`, `statistics`, `block`, `blocked`, `unblock`, `buffer`, `logout`
-- Handled: `exception_send`, `exception_block`, `exception_blocked`, `exception_unblock`
+These screenshots illustrate a course demo; they do not establish load capacity or reliability.
 
-### 🧑‍💻 Srijan Sareen (srijansa)
-- Implemented: `send`, `broadcast`, `statistics`, `block`, `blocked`, `unblock`, `buffer`, `logout`
+## Contributions and limits
 
-## 🖼️ Sample Screenshots
+The earlier README credits Manish Malepati and Srijan Sareen with work across messaging, statistics, blocking, buffering, and logout. It specifically listed Manish on exception handling for send and blocking commands. The private source history is needed to attribute individual functions more precisely.
 
-Sent one message and received one message:
-![image](https://github.com/user-attachments/assets/5d18584f-1d94-42f2-b4f5-865d9b181cb1)
-
-Broadcast message received:
-![image](https://github.com/user-attachments/assets/9a040561-75cd-48b6-a091-6693e937418b)
-
-
-
-## 🔒 Access Policy
-
-Due to university guidelines, the full source code is not publicly available.  
-To request access, please contact **Manish Malepati** at [manishma@buffalo.edu or manish.malepati@gmail.com].
-
----
-
+There is no runnable build, test suite, or public protocol specification in this repository. This was an academic exercise, not a hosted chat service. Questions about the work can be sent to [Manish Malepati](mailto:manish.malepati@gmail.com).
